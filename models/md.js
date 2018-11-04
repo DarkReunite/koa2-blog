@@ -8,6 +8,7 @@ const mdSchema = new Schema({
   tags: [{
     tagName: {type: String, default: ''}
   }],
+  createdAt: Date,
   comment: [{
     username: {type: String, default: ''},
     content: {type: String, default: ''},
@@ -19,11 +20,7 @@ const mdSchema = new Schema({
       toWho: {type: String, default: ''},
     }]
   }]
-},
-{
-  timestamps: true,
-}
-)
+})
 const md = mongoose.model('md', mdSchema);
 
 export default md;

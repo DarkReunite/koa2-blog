@@ -12,16 +12,23 @@ class Admin {
     //1. 查询数据库中是否存在相同的文件名
     //2. 不存在则移动到对应的文件夹中，并保存到数据库中
     //3. 存在则返回错误
+
+    //文件对象
     let file = ctx.request.files.mdFile;
+    //文件的创建时间
+    let createdAt = ctx.request.body.createdAt;
+    //文章id
     let article_id = null;
 
     try {
       let isExist = await mdModel.findOne({fileName: file.name});
       
       if (!isExist) { //不存在该文章的情况下 保存文件名及路径到数据库中
+        
         const md = {
           fileName: file.name,
-          saveAt: articles_path + file.name
+          saveAt: articles_path + file.name,
+          createdAt,
         }
         let result = await mdModel.create(md);
         
@@ -46,8 +53,6 @@ class Admin {
       if (err) throw err;
       })
 
-      
-
       ctx.body = {
         status: 1,
         article_id
@@ -67,8 +72,6 @@ class Admin {
     let _id = MdInfo.article_id;
     let category = MdInfo.category.name;
     let tag = MdInfo.tags;
-
-    console.log(MdInfo);
     
     try {
       //使用$addToSet操作符和$each修饰符添加多个元素到tags数组字段
@@ -77,7 +80,6 @@ class Admin {
         '$addToSet': {tags: { $each: tag}}
       })
       
-      console.log(result);
 
 
       ctx.body = {
