@@ -5,7 +5,7 @@ import marked from 'marked';
 
 class User {
   constructor(){
-    this.pageSize = 1; //一页显示多少篇
+    this.pageSize = 8; //一页显示多少篇
     this.getSummary = this.getSummary.bind(this);
     this.getTotalPage = this.getTotalPage.bind(this);
   }
@@ -21,12 +21,10 @@ class User {
     
     try {
       let mdList = await mdModel.find().sort({'_id': -1}).skip(skipPage).limit(this.pageSize).exec();
-
+      
       if (mdList.length === 0) {
-        ctx.body = {
-          status: 0,
-          message: '文章列表为空'
-        }
+        ctx.status = 501
+        ctx.message = 'article lists is null'
         return;
       }
       
@@ -147,8 +145,6 @@ class User {
         createdAt: md.createdAt,
         comment: md.comment
       }
-
-      console.log(article);
       
       
       ctx.body = article;

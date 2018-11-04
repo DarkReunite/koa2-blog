@@ -44,10 +44,8 @@ class V0 {
 
       //当密码不正确时
       if (account.password != newpassword) {
-        ctx.body = {
-          status: 0,
-          message: '账号或密码错误'
-        }
+        ctx.status = 403
+        ctx.message = 'Incorrect username or password'
         return;
       }
 
@@ -61,16 +59,15 @@ class V0 {
       // 签发Token
       const token = jwt.sign(payload, secret, {expiresIn: '1h'});
       const refresh_token = jwt.sign(payload, secret, {expiresIn: '2h'});
+
       ctx.body = {
         token,
         refresh_token
       }
 
     } catch (error) {
-      ctx.body = {
-        status: -1,
-        message: 'unknow error'
-      }
+      ctx.status = 500;
+      ctx.message = error;
     }
 
   }
